@@ -1,7 +1,15 @@
 import io from 'socket.io-client';
 import { EventEmitter } from 'typed-event-emitter';
 import {
-  APIOptions, APIQueryMessage, GetQueryMessage, Job, JobDeleteMessage, JobList, Query, WebsiteQueryMessage,
+  APIOptions,
+  APIQueryMessage,
+  ConnectedProvidersCountMessage,
+  GetQueryMessage,
+  Job,
+  JobDeleteMessage,
+  JobList,
+  Query,
+  WebsiteQueryMessage,
 } from './types';
 
 export default class OpenWebsiteStatusAPI extends EventEmitter {
@@ -23,6 +31,8 @@ export default class OpenWebsiteStatusAPI extends EventEmitter {
 
   public readonly onJobDelete = this.registerEvent<(jobId: string, queryId: string) => unknown>();
 
+  public readonly onConnectedProvidersCount = this.registerEvent<(count: number) => unknown>();
+
   private readonly options: APIOptions;
 
   private socket!: SocketIOClient.Socket;
@@ -33,7 +43,7 @@ export default class OpenWebsiteStatusAPI extends EventEmitter {
     this.connect();
   }
 
-  private connect () {
+  private connect(): void {
     this.socket = io(this.options.server, {
       path: this.options.path ?? '/api-socket',
     });
@@ -72,6 +82,10 @@ export default class OpenWebsiteStatusAPI extends EventEmitter {
 
     this.socket.on('job-delete', (message: JobDeleteMessage) => {
       this.emit(this.onJobDelete, message.jobId, message.queryId);
+    });
+
+    this.socket.on('connected-providers-count', (message: ConnectedProvidersCountMessage) => {
+      this.emit(this.onConnectedProvidersCount, message.count);
     });
   }
 

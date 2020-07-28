@@ -107,3 +107,7 @@ export interface JobDeleteMessage {
   jobId: string;
   queryId: string;
 }
+
+export interface ConnectedProvidersCountMessage {
+  count: number;
+}
