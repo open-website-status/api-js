@@ -104,4 +104,8 @@ export default class OpenWebsiteStatusAPI extends EventEmitter {
       });
     }));
   }
+
+  public close(): void {
+    this.socket.close();
+  }
 }
