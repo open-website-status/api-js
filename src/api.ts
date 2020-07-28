@@ -23,7 +23,7 @@ export default class OpenWebsiteStatusAPI extends EventEmitter {
 
   public readonly onJobDelete = this.registerEvent<(jobId: string, queryId: string) => unknown>();
 
-  public readonly socket: SocketIOClient.Socket;
+  private readonly socket: SocketIOClient.Socket;
 
   public constructor(options: APIOptions) {
     super();
