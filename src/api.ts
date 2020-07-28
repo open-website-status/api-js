@@ -23,13 +23,19 @@ export default class OpenWebsiteStatusAPI extends EventEmitter {
 
   public readonly onJobDelete = this.registerEvent<(jobId: string, queryId: string) => unknown>();
 
-  private readonly socket: SocketIOClient.Socket;
+  private readonly options: APIOptions;
+
+  private socket!: SocketIOClient.Socket;
 
   public constructor(options: APIOptions) {
     super();
+    this.options = options;
+    this.connect();
+  }
 
-    this.socket = io(options.server, {
-      path: options.path ?? '/api-socket',
+  private connect () {
+    this.socket = io(this.options.server, {
+      path: this.options.path ?? '/api-socket',
     });
 
     this.socket.on('connect', () => {
@@ -107,5 +113,11 @@ export default class OpenWebsiteStatusAPI extends EventEmitter {
 
   public close(): void {
     this.socket.close();
+    this.socket.removeAllListeners();
+  }
+
+  public reconnect(): void {
+    this.close();
+    this.connect();
   }
 }
