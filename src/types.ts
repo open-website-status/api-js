@@ -7,7 +7,7 @@ export interface APIQueryMessage {
   token: string;
   protocol: 'http:' | 'https:';
   hostname: string;
-  port?: number;
+  port: number | null;
   pathname: string;
   search: string;
   subscribe: boolean;
@@ -17,7 +17,7 @@ export interface WebsiteQueryMessage {
   reCaptchaResponse: string;
   protocol: 'http:' | 'https:';
   hostname: string;
-  port?: number;
+  port: number | null;
   pathname: string;
   search: string;
   subscribe: boolean;
