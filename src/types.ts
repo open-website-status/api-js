@@ -33,7 +33,7 @@ export interface Query {
   timestamp: string;
   protocol: 'http:' | 'https:';
   hostname: string;
-  port: number | undefined;
+  port: number | null;
   pathname: string;
   search: string;
 }
