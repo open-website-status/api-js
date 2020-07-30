@@ -3,8 +3,8 @@ import { EventEmitter } from 'typed-event-emitter';
 import {
   APIOptions,
   APIQueryMessage,
-  ConnectedProvidersCountMessage,
-  GetQueryMessage,
+  ConnectedProvidersCountMessage, GetHostnameQueriesMessage,
+  GetQueryMessage, HostnameQueries,
   Job,
   JobDeleteMessage,
   JobList,
@@ -30,6 +30,8 @@ export default class OpenWebsiteStatusAPI extends EventEmitter {
   public readonly onJobModify = this.registerEvent<(job: Job) => unknown>();
 
   public readonly onJobDelete = this.registerEvent<(jobId: string, queryId: string) => unknown>();
+
+  public readonly onQueryCreate = this.registerEvent<(query: Query) => unknown>();
 
   public readonly onConnectedProvidersCount = this.registerEvent<(count: number) => unknown>();
 
@@ -84,6 +86,10 @@ export default class OpenWebsiteStatusAPI extends EventEmitter {
       this.emit(this.onJobDelete, message.jobId, message.queryId);
     });
 
+    this.socket.on('query-create', (message: Query) => {
+      this.emit(this.onQueryCreate, message);
+    });
+
     this.socket.on('connected-providers-count', (message: ConnectedProvidersCountMessage) => {
       this.emit(this.onConnectedProvidersCount, message.count);
     });
@@ -120,6 +126,18 @@ export default class OpenWebsiteStatusAPI extends EventEmitter {
           reject(new Error(errorMessage));
         } else {
           resolve(query);
+        }
+      });
+    }));
+  }
+
+  public getHostnameQueries(data: GetHostnameQueriesMessage): Promise<Query[]> {
+    return new Promise(((resolve, reject) => {
+      this.socket.emit('get-hostname-queries', data, (errorMessage: string | null, message: HostnameQueries) => {
+        if (errorMessage !== null) {
+          reject(new Error(errorMessage));
+        } else {
+          resolve(message.queries);
         }
       });
     }));

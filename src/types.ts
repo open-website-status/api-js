@@ -38,6 +38,16 @@ export interface Query {
   search: string;
 }
 
+export interface GetHostnameQueriesMessage {
+  hostname: string;
+  subscribe: boolean;
+}
+
+export interface HostnameQueries {
+  hostname: string;
+  queries: Query[];
+}
+
 export interface BaseJob {
   id: string;
   queryId: string;
