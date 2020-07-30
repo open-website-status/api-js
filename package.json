@@ -1,6 +1,6 @@
 {
   "name": "@open-website-status/api",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "TypeScript API client for Open Website Status",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
